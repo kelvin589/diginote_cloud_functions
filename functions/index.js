@@ -54,3 +54,9 @@ exports.notifyDevicesToLowBattery = functions.https.onCall(async (data, context)
 
   return `Successfully received: ${screenToken}`;
 });
+
+exports.getUsersEmail = functions.https.onCall(async (data, context) => {
+  const userID = data.userID;
+  const user = await admin.auth().getUser(userID);
+  return user.email;
+});
