@@ -65,6 +65,7 @@ exports.notifyDevicesToOnlineStatus = functions.https.onCall(async (data, contex
   // Retrieved parameters
   const screenToken = data.token;
   const isOnline = (data.isOnline === "true");
+  const message = data.message;
   functions.logger.log("isOnline? " + isOnline);
 
   const usersRef = admin.firestore().collection('users');
@@ -104,7 +105,7 @@ exports.notifyDevicesToOnlineStatus = functions.https.onCall(async (data, contex
   const payload = {
     "notification": {
       "title": isOnline ? ("Screen online: " + screenName) : ("Screen offline: " + screenName),
-      "body": isOnline ? ("The screen has turn back online") : ("The screen has turned offline"),
+      "body": isOnline ? ("The screen has turn back online. " + message) : ("The screen has turned offline. " + message),
     },
     "tokens": deviceTokens,
   };
