@@ -61,6 +61,16 @@ exports.getUsersEmail = functions.https.onCall(async (data, context) => {
   return user.email;
 });
 
+exports.onIsOnlineChanged = functions.database.ref('/status/{screenToken}').onUpdate(
+  async (change, context) => {
+    const after = change.after.val();
+    const isOnline = (after.isOnline === "true");
+
+    const screenInfoFirestoreRef = admin.firestore().collection('screenInfo').doc(context.params.screenToken);
+    await screenInfoFirestoreRef.update({isOnline: isOnline});
+  }
+);
+
 exports.notifyDevicesToOnlineStatus = functions.https.onCall(async (data, context) => {
   // Retrieved parameters
   const screenToken = data.token;
